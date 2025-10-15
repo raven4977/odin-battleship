@@ -8,6 +8,10 @@ class Ship {
     this.damage++;
     return this;
   }
+  isSunk() {
+    if (this.damage == this.length) this.sunk = true;
+    return this;
+  }
 }
 
 module.exports = {
