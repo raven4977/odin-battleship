@@ -4,6 +4,10 @@ class Ship {
     this.damage = 0;
     this.sunk = false;
   }
+  hit() {
+    this.damage++;
+    return this;
+  }
 }
 
 module.exports = {
