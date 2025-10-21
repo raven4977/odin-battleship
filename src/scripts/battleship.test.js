@@ -7,3 +7,9 @@ test("Create a ship object", () => {
     sunk: false,
   });
 });
+
+test("Increment the damage of a ship object", () => {
+  const ship = new Ship(4);
+  ship.hit();
+  expect(ship.damage).toBe(1);
+});
