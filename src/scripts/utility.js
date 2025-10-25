@@ -1,4 +1,10 @@
-export function validate(length, coordinates, currentShips, maxShips, board) {
+export function validateShipPlacement(
+  length,
+  coordinates,
+  currentShips,
+  maxShips,
+  board
+) {
   const invalidPlacements = [-10, -11, -1, -9, 9, 10, 11, 1];
   const boardEndIndices = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
   if (length < 1 || length > 4) return false;
@@ -41,4 +47,11 @@ export function validate(length, coordinates, currentShips, maxShips, board) {
   }
 
   return true;
+}
+
+export function validateAttackCoordinates(x, y, missedShots) {
+  if (x > 10 || x < 1 || y > 10 || y < 1) return false;
+  const index = (y - 1) * 10 + (x - 1);
+  if (missedShots.size && missedShots.has(index)) return false;
+  return index;
 }
