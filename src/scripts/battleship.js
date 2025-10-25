@@ -1,4 +1,4 @@
-const { validate } = require("./utility");
+import { validateShipPlacement, validateAttackCoordinates } from "./utility.js";
 
 class Ship {
   constructor(length) {
@@ -29,8 +29,9 @@ const Gameboard = () => {
     length3: 2,
     length4: 1,
   };
+  const missedShots = new Set();
   const placeShip = (length, coordinates) => {
-    const isValid = validate(
+    const isValid = validateShipPlacement(
       length,
       coordinates,
       currentShips,
@@ -43,7 +44,27 @@ const Gameboard = () => {
       coordinates.forEach((coordinate) => (board[coordinate] = ship));
     }
   };
-  return { board, currentShips, maxShips, placeShip };
+  const receiveAttack = (x, y) => {
+    const index = validateAttackCoordinates(x, y, missedShots);
+    if (index >= 0) {
+      if (board[index]) {
+        const ship = board[index];
+        ship.hit();
+        board[index] = false;
+        return ship;
+      }
+      missedShots.add(index);
+      return false;
+    }
+  };
+  return {
+    board,
+    currentShips,
+    maxShips,
+    placeShip,
+    receiveAttack,
+    missedShots,
+  };
 };
 
 module.exports = {
