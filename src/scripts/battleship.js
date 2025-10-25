@@ -57,6 +57,7 @@ const Gameboard = () => {
       return false;
     }
   };
+  const allShipsDestroyed = () => board.every((square) => !square);
   return {
     board,
     currentShips,
@@ -64,6 +65,7 @@ const Gameboard = () => {
     placeShip,
     receiveAttack,
     missedShots,
+    allShipsDestroyed,
   };
 };
 
