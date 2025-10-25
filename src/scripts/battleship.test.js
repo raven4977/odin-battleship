@@ -1,7 +1,10 @@
 const { Ship, Gameboard } = require("./battleship");
-const { validate } = require("./utility");
+const {
+  validateShipPlacement,
+  validateAttackCoordinates,
+} = require("./utility");
 
-test("Create a ship object", () => {
+test("Ship creation: creates ship object with correct initial properties", () => {
   expect(new Ship(4)).toEqual({
     length: 4,
     damage: 0,
@@ -9,53 +12,77 @@ test("Create a ship object", () => {
   });
 });
 
-test("Increment the damage of a ship object", () => {
+test("Ship hit: increments damage counter by 1", () => {
   const ship = new Ship(4);
   ship.hit();
   expect(ship.damage).toBe(1);
 });
 
-test("Update ship object sunk boolean to true", () => {
+test("Ship sinking: marks ship as sunk when damage equals length", () => {
   const ship = new Ship(1);
   ship.hit();
   expect(ship.isSunk()).toBe(true);
 });
 
-test("Ship object sunk boolean remains false", () => {
+test("Ship sinking: ship remains afloat when damage is less than length", () => {
   const ship = new Ship(2);
   ship.hit();
   expect(ship.isSunk()).toBe(false);
 });
 
-test("Ship length is valid", () => {
+test("Ship placement validation: accepts valid ship length matching coordinates", () => {
   const game = Gameboard();
   expect(
-    validate(3, [1, 2, 3], game.currentShips, game.maxShips, game.board)
+    validateShipPlacement(
+      3,
+      [1, 2, 3],
+      game.currentShips,
+      game.maxShips,
+      game.board
+    )
   ).toBe(true);
 });
 
-test("Ship length is invalid", () => {
+test("Ship placement validation: rejects ship length not matching coordinates count", () => {
   const game = Gameboard();
   expect(
-    validate(5, [1, 2, 3, 4], game.currentShips, game.maxShips, game.board)
+    validateShipPlacement(
+      5,
+      [1, 2, 3, 4],
+      game.currentShips,
+      game.maxShips,
+      game.board
+    )
   ).toBe(false);
 });
 
-test("Coordinates contain invalid values", () => {
+test("Ship placement validation: rejects coordinates with invalid values", () => {
   const game = Gameboard();
   expect(
-    validate(4, [-1, 2, 3, 4], game.currentShips, game.maxShips, game.board)
+    validateShipPlacement(
+      4,
+      [-1, 2, 3, 4],
+      game.currentShips,
+      game.maxShips,
+      game.board
+    )
   ).toBe(false);
 });
 
-test("Coordinates are valid", () => {
+test("Ship placement validation: accepts valid coordinate indices within board bounds", () => {
   const game = Gameboard();
   expect(
-    validate(4, [10, 11, 12, 13], game.currentShips, game.maxShips, game.board)
+    validateShipPlacement(
+      4,
+      [10, 11, 12, 13],
+      game.currentShips,
+      game.maxShips,
+      game.board
+    )
   ).toBe(true);
 });
 
-test("Place a ship on the board", () => {
+test("Ship placement: successfully places ship spanning multiple board indices", () => {
   const game = Gameboard();
   const board = game.board;
   game.placeShip(4, [0, 1, 2, 3]);
@@ -80,7 +107,7 @@ test("Place a ship on the board", () => {
   expect(board.slice(4, 7)).toEqual([false, false, false]);
 });
 
-test("Place a ship on the board", () => {
+test("Ship placement: successfully places single-length ship", () => {
   const game = Gameboard();
   const board = game.board;
   game.placeShip(1, [9]);
@@ -93,7 +120,7 @@ test("Place a ship on the board", () => {
   ]);
 });
 
-test("Fail to place a second ship within the boundaries of the first", () => {
+test("Ship placement: rejects overlapping ship placement", () => {
   const game = Gameboard();
   const board = game.board;
   game.placeShip(4, [0, 1, 2, 3]);
@@ -101,7 +128,7 @@ test("Fail to place a second ship within the boundaries of the first", () => {
   expect(board.slice(4, 7)).toEqual([false, false, false]);
 });
 
-test("Successfully place a second ship on the board", () => {
+test("Ship placement: successfully places non-overlapping ships", () => {
   const game = Gameboard();
   const board = game.board;
   game.placeShip(4, [0, 1, 2, 3]);
@@ -125,7 +152,7 @@ test("Successfully place a second ship on the board", () => {
   ]);
 });
 
-test("Fail to place ships that have reached their maximum limit", () => {
+test("Ship placement: rejects ship when maximum count for that length is reached", () => {
   const game = Gameboard();
   const board = game.board;
   game.placeShip(4, [0, 1, 2, 3]);
@@ -133,30 +160,76 @@ test("Fail to place ships that have reached their maximum limit", () => {
   expect(board.slice(5, 9)).toEqual([false, false, false, false]);
 });
 
-test("Fail to place ships if length and coordinates do not match", () => {
+test("Ship placement: rejects ship when length doesn't match coordinates array length", () => {
   const game = Gameboard();
   const board = game.board;
   game.placeShip(3, [0, 1, 2, 3]);
   expect(board.slice(0, 4)).toEqual([false, false, false, false]);
 });
 
-test("Return true if coordinates do not wrap onto a new line", () => {
+test("Ship placement validation: accepts horizontal placement at row edge", () => {
   const game = Gameboard();
   expect(
-    validate(2, [8, 9], game.currentShips, game.maxShips, game.board)
+    validateShipPlacement(
+      2,
+      [8, 9],
+      game.currentShips,
+      game.maxShips,
+      game.board
+    )
   ).toBe(true);
 });
 
-test("Return false if coordinates wrap onto a new line", () => {
+test("Ship placement validation: rejects coordinates that wrap to next row", () => {
   const game = Gameboard();
   expect(
-    validate(2, [9, 10], game.currentShips, game.maxShips, game.board)
+    validateShipPlacement(
+      2,
+      [9, 10],
+      game.currentShips,
+      game.maxShips,
+      game.board
+    )
   ).toBe(false);
 });
 
-test("Return true when placing a ship vertically on the edge of the board", () => {
+test("Ship placement validation: accepts valid vertical placement on board edge", () => {
   const game = Gameboard();
   expect(
-    validate(3, [9, 19, 29], game.currentShips, game.maxShips, game.board)
+    validateShipPlacement(
+      3,
+      [9, 19, 29],
+      game.currentShips,
+      game.maxShips,
+      game.board
+    )
   ).toBe(true);
+});
+
+test("Attack validation: rejects user coordinates outside valid range (1-10)", () => {
+  const game = Gameboard();
+  expect(validateAttackCoordinates(0, 11, game.missedShots)).toBe(false);
+});
+
+test("Attack validation: accepts user coordinates within valid range (1-10)", () => {
+  const game = Gameboard();
+  expect(typeof validateAttackCoordinates(1, 10, game.missedShots)).toBe(
+    "number"
+  );
+});
+
+test("Receive attack: returns ship object with incremented damage when hitting a ship", () => {
+  const game = Gameboard();
+  game.placeShip(3, [0, 1, 2]);
+  expect(game.receiveAttack(1, 1)).toEqual({
+    length: 3,
+    damage: 1,
+    sunk: false,
+  });
+});
+
+test("Receive attack: returns false when attacking empty coordinates", () => {
+  const game = Gameboard();
+  game.placeShip(3, [0, 1, 2]);
+  expect(game.receiveAttack(3, 2)).toEqual(false);
 });
