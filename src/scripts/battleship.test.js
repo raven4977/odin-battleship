@@ -233,3 +233,22 @@ test("Receive attack: returns false when attacking empty coordinates", () => {
   game.placeShip(3, [0, 1, 2]);
   expect(game.receiveAttack(3, 2)).toEqual(false);
 });
+
+test("Gameboard missed attacks: gameboard tracks all missed attacks", () => {
+  const game = Gameboard();
+  game.receiveAttack(1, 1);
+  game.receiveAttack(2, 2);
+  expect(game.missedShots.has(0)).toBe(true);
+  expect(game.missedShots.has(11)).toBe(true);
+});
+
+test("Gameboard ships status: return true if no ships are present on the board", () => {
+  const game = Gameboard();
+  expect(game.allShipsDestroyed()).toBe(true);
+});
+
+test("Gameboard ships status: return false ships are present on the board", () => {
+  const game = Gameboard();
+  game.placeShip(2, [0, 1]);
+  expect(game.allShipsDestroyed()).toBe(false);
+});
