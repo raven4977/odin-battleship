@@ -34,4 +34,8 @@ const validate = (() => {
   return { validateShipPlacement };
 })();
 
-export { validate };
+function updateDisplayMessage(element, message) {
+  element.textContent = message;
+}
+
+export { validate, updateDisplayMessage };
