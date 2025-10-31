@@ -5,6 +5,10 @@ class Ship {
     this.sunk = false;
     this.coordinates = [];
   }
+  hit() {
+    this.damage++;
+    return this;
+  }
 }
 
 export { Ship };
