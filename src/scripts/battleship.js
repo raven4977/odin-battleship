@@ -1,3 +1,5 @@
+import { validate } from "./utility.js";
+
 class Ship {
   constructor(length) {
     this.length = length;
@@ -18,4 +20,38 @@ class Ship {
   }
 }
 
-export { Ship };
+const Gameboard = () => {
+  const board = new Array(100).fill(null);
+  const maxShips = {
+    length1: 4,
+    length2: 3,
+    length3: 2,
+    length4: 1,
+  };
+  const totalShips = {
+    length1: 0,
+    length2: 0,
+    length3: 0,
+    length4: 0,
+  };
+  const placedShips = new Set();
+  const placeShip = (length, coordinates) => {
+    const valid = validate.validateShipPlacement(
+      length,
+      coordinates,
+      board,
+      maxShips,
+      totalShips
+    );
+    if (valid) {
+      const ship = new Ship(length);
+      ship.coordinates = coordinates;
+      totalShips[`length${length}`]++;
+      placedShips.add(ship);
+      coordinates.forEach((coordinate) => (board[coordinate] = ship));
+    }
+  };
+  return { board, maxShips, totalShips, placeShip };
+};
+
+export { Ship, Gameboard };
