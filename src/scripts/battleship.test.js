@@ -17,3 +17,16 @@ test("Ship: create a ship object with a length of 2", () => {
     coordinates: [],
   });
 });
+
+test("hit: increment ship object damage by one", () => {
+  const ship = new Ship(3);
+  ship.hit();
+  expect(ship).toEqual({ length: 3, damage: 1, sunk: false, coordinates: [] });
+});
+
+test("hit: increment ship object damage by two", () => {
+  const ship = new Ship(3);
+  ship.hit();
+  ship.hit();
+  expect(ship).toEqual({ length: 3, damage: 2, sunk: false, coordinates: [] });
+});
