@@ -20,6 +20,13 @@ class Ship {
   }
 }
 
+class Player {
+  constructor() {
+    this.gameboard = Gameboard();
+    this.player = true;
+  }
+}
+
 const Gameboard = () => {
   const board = new Array(100).fill(null);
   const maxShips = {
