@@ -237,3 +237,93 @@ test("validateShipPlacement: accepts vertical ship at bottom edge", () => {
     )
   ).toBe(true);
 });
+
+test("placeShip: place a horizontal ship on the board", () => {
+  const game = Gameboard();
+  game.placeShip(3, [0, 1, 2]);
+  expect(game.board[0]).toEqual({
+    length: 3,
+    damage: 0,
+    sunk: false,
+    coordinates: [0, 1, 2],
+  });
+});
+
+test("placeShip: fail to place overlapping ships", () => {
+  const game = Gameboard();
+  game.placeShip(3, [0, 1, 2]);
+  game.placeShip(2, [2, 12]);
+  expect(game.board[2]).toEqual({
+    length: 3,
+    damage: 0,
+    sunk: false,
+    coordinates: [0, 1, 2],
+  });
+});
+
+test("placeShip: place a horizontal ship on the edge of the board", () => {
+  const game = Gameboard();
+  game.placeShip(2, [98, 99]);
+  expect(game.board[99]).toEqual({
+    length: 2,
+    damage: 0,
+    sunk: false,
+    coordinates: [98, 99],
+  });
+});
+
+test("placeShip: place a vertical ship on the edge of the board", () => {
+  const game = Gameboard();
+  game.placeShip(2, [89, 99]);
+  expect(game.board[89]).toEqual({
+    length: 2,
+    damage: 0,
+    sunk: false,
+    coordinates: [89, 99],
+  });
+});
+
+test("placeShip: place a vertical ship on the board", () => {
+  const game = Gameboard();
+  game.placeShip(3, [0, 10, 20]);
+  expect(game.board[0]).toEqual({
+    length: 3,
+    damage: 0,
+    sunk: false,
+    coordinates: [0, 10, 20],
+  });
+  expect(game.board[10]).toBe(game.board[0]);
+  expect(game.board[20]).toBe(game.board[0]);
+});
+
+test("placeShip: increments totalShips count", () => {
+  const game = Gameboard();
+  expect(game.totalShips.length3).toBe(0);
+  game.placeShip(3, [0, 1, 2]);
+  expect(game.totalShips.length3).toBe(1);
+});
+
+test("placeShip: does not modify board on invalid placement", () => {
+  const game = Gameboard();
+  game.placeShip(5, [0, 1, 2, 3, 4]);
+  expect(game.board[0]).toBe(null);
+});
+
+test("placeShip: does not place ship that wraps to next row", () => {
+  const game = Gameboard();
+  game.placeShip(3, [8, 9, 10]);
+  expect(game.board[8]).toBe(null);
+  expect(game.board[9]).toBe(null);
+  expect(game.board[10]).toBe(null);
+});
+
+test("placeShip: place ship of length 1", () => {
+  const game = Gameboard();
+  game.placeShip(1, [50]);
+  expect(game.board[50]).toEqual({
+    length: 1,
+    damage: 0,
+    sunk: false,
+    coordinates: [50],
+  });
+});
