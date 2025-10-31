@@ -372,3 +372,20 @@ test("receiveAttack: tracks all previous moves", () => {
   expect(game.previousAttacks.has(0)).toBe(true);
   expect(game.previousAttacks.has(1)).toBe(true);
 });
+
+test("allShipsDestroyed: returns false if not all ships have been sunk", () => {
+  const game = Gameboard();
+  game.placeShip(1, [0]);
+  game.placeShip(1, [3]);
+  game.receiveAttack(0);
+  expect(game.allShipsDestroyed()).toBe(false);
+});
+
+test("allShipsDestroyed: returns true if all ships have been sunk", () => {
+  const game = Gameboard();
+  game.placeShip(1, [0]);
+  game.placeShip(1, [3]);
+  game.receiveAttack(0);
+  game.receiveAttack(3);
+  expect(game.allShipsDestroyed()).toBe(true);
+});
