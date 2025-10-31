@@ -35,6 +35,8 @@ const Gameboard = () => {
     length4: 0,
   };
   const placedShips = new Set();
+  const previousAttacks = new Set();
+  const missedAttacks = new Set();
   const placeShip = (length, coordinates) => {
     const valid = validate.validateShipPlacement(
       length,
@@ -51,7 +53,26 @@ const Gameboard = () => {
       coordinates.forEach((coordinate) => (board[coordinate] = ship));
     }
   };
-  return { board, maxShips, totalShips, placeShip };
+  const receiveAttack = (index) => {
+    if (previousAttacks.has(index)) return;
+    previousAttacks.add(index);
+    if (board[index]) {
+      const ship = board[index];
+      ship.hit();
+      return ship;
+    }
+    missedAttacks.add(index);
+    return board[index];
+  };
+  return {
+    board,
+    maxShips,
+    totalShips,
+    placeShip,
+    receiveAttack,
+    previousAttacks,
+    missedAttacks,
+  };
 };
 
 export { Ship, Gameboard };
