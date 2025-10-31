@@ -30,3 +30,15 @@ test("hit: increment ship object damage by two", () => {
   ship.hit();
   expect(ship).toEqual({ length: 3, damage: 2, sunk: false, coordinates: [] });
 });
+
+test("isSunk: returns true if a ship is sunk", () => {
+  const ship = new Ship(1);
+  ship.hit();
+  expect(ship.isSunk()).toBe(true);
+});
+
+test("isSunk method: returns false if a ship isn't sunk", () => {
+  const ship = new Ship(3);
+  ship.hit();
+  expect(ship.isSunk()).toBe(false);
+});
