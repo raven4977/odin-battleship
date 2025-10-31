@@ -53,6 +53,7 @@ const Gameboard = () => {
       coordinates.forEach((coordinate) => (board[coordinate] = ship));
     }
   };
+
   const receiveAttack = (index) => {
     if (previousAttacks.has(index)) return;
     previousAttacks.add(index);
@@ -64,6 +65,11 @@ const Gameboard = () => {
     missedAttacks.add(index);
     return board[index];
   };
+
+  const allShipsDestroyed = () => {
+    return [...placedShips].every((ship) => ship.sunk);
+  };
+
   return {
     board,
     maxShips,
@@ -72,6 +78,7 @@ const Gameboard = () => {
     receiveAttack,
     previousAttacks,
     missedAttacks,
+    allShipsDestroyed,
   };
 };
 
