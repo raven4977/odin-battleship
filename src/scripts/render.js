@@ -1,4 +1,5 @@
 import { events } from "./events.js";
+import { updateDisplayMessage } from "./utility.js";
 
 const render = (() => {
   const renderBoard = (player) => {
@@ -23,7 +24,16 @@ const render = (() => {
   const displayAttack = (attack, index, player) => {
     const playerType = player.player ? "player" : "computer";
     const boardElement = document.querySelector(`.${playerType}-board`);
+    const resultElement = document.querySelector(".display-result");
+    const audio = new Audio("./audio/attack-sound.flac");
+    audio.play();
     if (!attack) {
+      if (!player.player) {
+        updateDisplayMessage(resultElement, "You missed! Computer turn!");
+      } else {
+        updateDisplayMessage(resultElement, "Computer missed! Your turn!");
+      }
+
       boardElement.children[index].textContent = "X";
       boardElement.children[index].classList.add("--miss");
     } else if (attack.sunk) {
@@ -37,12 +47,36 @@ const render = (() => {
         cell.appendChild(image);
         cell.classList.add("--sunk");
       });
+      if (player.gameboard.allShipsDestroyed()) {
+        if (!player.player) {
+          updateDisplayMessage(
+            resultElement,
+            "You destroyed all enemy ships! You win!"
+          );
+        } else {
+          updateDisplayMessage(
+            resultElement,
+            "All your ships have been destroyed! You lose!"
+          );
+        }
+        return;
+      }
+      if (!player.player) {
+        updateDisplayMessage(resultElement, "You sunk a ship!");
+      } else {
+        updateDisplayMessage(resultElement, "Computer sunk a ship!");
+      }
     } else {
       const image = document.createElement("img");
       image.classList.add("icon");
       image.src = "./images/ship-solid-full.svg";
       boardElement.children[index].appendChild(image);
       boardElement.children[index].classList.add("--hit");
+      if (!player.player) {
+        updateDisplayMessage(resultElement, "You hit a ship!");
+      } else {
+        updateDisplayMessage(resultElement, "Computer hit a ship!");
+      }
     }
   };
   return { renderBoard, displayAttack };
