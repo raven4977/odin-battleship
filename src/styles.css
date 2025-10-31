@@ -16,3 +16,11 @@ body {
 button {
   cursor: pointer;
 }
+
+.header {
+  padding: 1em 1em;
+}
+
+.header__title {
+  font-size: 2.5rem;
+}
