@@ -327,3 +327,48 @@ test("placeShip: place ship of length 1", () => {
     coordinates: [50],
   });
 });
+
+test("receiveAttack: increments the damage of a ship", () => {
+  const game = Gameboard();
+  game.placeShip(2, [0, 1]);
+  expect(game.receiveAttack(1)).toEqual({
+    length: 2,
+    damage: 1,
+    sunk: false,
+    coordinates: [0, 1],
+  });
+});
+
+test("receiveAttack: correctly fails to damage a ship on the same square twice", () => {
+  const game = Gameboard();
+  game.placeShip(2, [0, 1]);
+  game.receiveAttack(1);
+  game.receiveAttack(1);
+  expect(game.board[0]).toEqual({
+    length: 2,
+    damage: 1,
+    sunk: false,
+    coordinates: [0, 1],
+  });
+});
+
+test("receiveAttack: successfully sink a ship", () => {
+  const game = Gameboard();
+  game.placeShip(2, [0, 1]);
+  game.receiveAttack(0);
+  expect(game.receiveAttack(1)).toEqual({
+    length: 2,
+    damage: 2,
+    sunk: true,
+    coordinates: [0, 1],
+  });
+});
+
+test("receiveAttack: tracks all previous moves", () => {
+  const game = Gameboard();
+  game.placeShip(2, [0, 1]);
+  game.receiveAttack(0);
+  game.receiveAttack(1);
+  expect(game.previousAttacks.has(0)).toBe(true);
+  expect(game.previousAttacks.has(1)).toBe(true);
+});
