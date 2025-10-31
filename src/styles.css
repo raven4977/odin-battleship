@@ -1,0 +1,18 @@
+:root {
+  --odin-dark: #101828;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--odin-dark);
+  color: white;
+}
+
+button {
+  cursor: pointer;
+}
