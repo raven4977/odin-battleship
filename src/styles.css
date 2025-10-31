@@ -94,3 +94,7 @@ button {
   justify-content: center;
   font-size: 1.75rem;
 }
+
+.ship {
+  background-color: rgba(30, 175, 49, 0.288);
+}
