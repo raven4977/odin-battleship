@@ -38,4 +38,12 @@ function updateDisplayMessage(element, message) {
   element.textContent = message;
 }
 
-export { validate, updateDisplayMessage };
+function getAvailableMoves(previousAttacks) {
+  const available = [];
+  for (let i = 0; i < 100; i++) {
+    if (!previousAttacks.has(i)) available.push(i);
+  }
+  return available;
+}
+
+export { validate, updateDisplayMessage, getAvailableMoves };
