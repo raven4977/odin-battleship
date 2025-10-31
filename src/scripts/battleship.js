@@ -77,6 +77,15 @@ const Gameboard = () => {
     return [...placedShips].every((ship) => ship.sunk);
   };
 
+  const reset = () => {
+    placedShips.forEach((ship) => {
+      ship.damage = 0;
+      ship.sunk = false;
+    });
+    missedAttacks.clear();
+    previousAttacks.clear();
+  };
+
   return {
     board,
     maxShips,
@@ -86,6 +95,7 @@ const Gameboard = () => {
     previousAttacks,
     missedAttacks,
     allShipsDestroyed,
+    reset,
   };
 };
 
