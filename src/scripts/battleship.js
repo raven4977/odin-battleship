@@ -1,5 +1,5 @@
-import { validate } from "./utility.js";
-
+import { validate, getAvailableMoves } from "./utility.js";
+import { render } from "./render.js";
 class Ship {
   constructor(length) {
     this.length = length;
@@ -115,7 +115,23 @@ const playGame = (() => {
   const changeTurn = () => {
     playerTurn = !playerTurn;
   };
-  return { getGameState, startGame, quitGame, changeTurn };
+  const computerMove = (player) => {
+    const previousAttacks = player.gameboard.previousAttacks;
+    const availableMoves = getAvailableMoves(previousAttacks);
+    if (availableMoves.length === 0) return;
+    const randomMove =
+      availableMoves[Math.floor(Math.random() * availableMoves.length)];
+    setTimeout(() => {
+      const attack = player.gameboard.receiveAttack(randomMove);
+      render.displayAttack(attack, randomMove, player);
+      if (attack) {
+        computerMove(player);
+      } else {
+        playGame.changeTurn();
+      }
+    }, 2500);
+  };
+  return { getGameState, startGame, quitGame, changeTurn, computerMove };
 })();
 
 export { Ship, Gameboard, Player, playGame };
