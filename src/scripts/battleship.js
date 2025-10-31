@@ -89,4 +89,23 @@ const Gameboard = () => {
   };
 };
 
-export { Ship, Gameboard, Player };
+const playGame = (() => {
+  let gameStatus = false;
+  let playerTurn = true;
+  const getGameState = () => {
+    return { gameStatus, playerTurn };
+  };
+  const startGame = () => {
+    gameStatus = true;
+  };
+  const quitGame = () => {
+    gameStatus = false;
+    playerTurn = true;
+  };
+  const changeTurn = () => {
+    playerTurn = !playerTurn;
+  };
+  return { getGameState, startGame, quitGame, changeTurn };
+})();
+
+export { Ship, Gameboard, Player, playGame };
