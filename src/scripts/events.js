@@ -5,7 +5,11 @@ import { updateDisplayMessage } from "./utility.js";
 const events = (() => {
   const resultElement = document.querySelector(".display-result");
   const descriptionElement = document.querySelector(".description");
+  let playerRef = null;
+  let computerRef = null;
   const startGameEvent = (player, computer) => {
+    playerRef = player;
+    computerRef = computer;
     const startButton = document.querySelector(".start-button");
     startButton.addEventListener("click", () => {
       if (startButton.textContent === "Start") {
@@ -16,6 +20,8 @@ const events = (() => {
         return;
       } else {
         playGame.quitGame();
+        player.gameboard.reset();
+        computer.gameboard.reset();
         render.renderBoard(player, "player");
         render.renderBoard(computer, "computer");
         updateDisplayMessage(startButton, "Start");
@@ -28,7 +34,24 @@ const events = (() => {
       }
     });
   };
-  return { startGameEvent };
+
+  const computerBoardEvents = (square, index, computer) => {
+    square.addEventListener("click", () => {
+      const gameState = playGame.getGameState();
+      if (gameState.gameStatus && gameState.playerTurn) {
+        if (square.getElementsByTagName("img").length > 0 || square.textContent)
+          return;
+
+        const attack = computer.gameboard.receiveAttack(index);
+        render.displayAttack(attack, index, computer);
+        if (!attack) {
+          playGame.changeTurn();
+          playGame.computerMove(playerRef, computerRef);
+        }
+      }
+    });
+  };
+  return { startGameEvent, computerBoardEvents };
 })();
 
 export { events };
