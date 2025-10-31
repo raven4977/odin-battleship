@@ -21,9 +21,9 @@ class Ship {
 }
 
 class Player {
-  constructor() {
+  constructor(playerType) {
     this.gameboard = Gameboard();
-    this.player = true;
+    this.player = playerType;
   }
 }
 
@@ -89,4 +89,4 @@ const Gameboard = () => {
   };
 };
 
-export { Ship, Gameboard };
+export { Ship, Gameboard, Player };
