@@ -92,9 +92,25 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.75rem;
+  font-size: 2rem;
 }
 
 .ship {
   background-color: rgba(30, 175, 49, 0.288);
+}
+
+.--miss {
+  background-color: rgba(62, 172, 172, 0.568);
+}
+
+.icon {
+  width: 80%;
+}
+
+.--hit {
+  background-color: rgba(128, 35, 35, 0.678);
+}
+
+.--sunk {
+  background-color: rgba(61, 136, 39, 0.678);
 }
