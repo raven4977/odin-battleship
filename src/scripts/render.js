@@ -1,5 +1,6 @@
 import { events } from "./events.js";
 import { updateDisplayMessage } from "./utility.js";
+import { playGame } from "./battleship.js";
 
 const render = (() => {
   const renderBoard = (player) => {
@@ -53,11 +54,13 @@ const render = (() => {
             resultElement,
             "You destroyed all enemy ships! You win!"
           );
+          playGame.quitGame();
         } else {
           updateDisplayMessage(
             resultElement,
             "All your ships have been destroyed! You lose!"
           );
+          playGame.quitGame();
         }
         return;
       }
