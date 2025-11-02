@@ -46,4 +46,37 @@ function getAvailableMoves(previousAttacks) {
   return available;
 }
 
-export { validate, updateDisplayMessage, getAvailableMoves };
+function calculateNextMove(current, nextMoveArray, previousAttacks) {
+  const edgeIndexRight = [9, 19, 29, 39, 49, 59, 69, 79, 89];
+  const edgeIndexLeft = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+  const directions = [
+    [1, 2, 3],
+    [-1, -2, -3],
+    [10, 20, 30],
+    [-10, -20, -30],
+  ];
+  for (const arr of directions) {
+    const validMoves = [];
+    for (const value of arr) {
+      const move = value + current;
+      if (move < 0 || move > 99) continue;
+      if (edgeIndexLeft.includes(current)) {
+        const difference = Math.abs(current - move);
+        if (difference !== 10) {
+          if (move < current) continue;
+        }
+      }
+      if (edgeIndexRight.includes(current)) {
+        const difference = Math.abs(current - move);
+        if (difference !== 10) {
+          if (move > current) continue;
+        }
+      }
+      if (previousAttacks.has(move)) continue;
+      validMoves.push(move);
+    }
+    if (validMoves.length) nextMoveArray.push(validMoves);
+  }
+}
+
+export { validate, updateDisplayMessage, getAvailableMoves, calculateNextMove };
