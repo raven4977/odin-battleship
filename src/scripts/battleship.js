@@ -1,4 +1,4 @@
-import { validate, getAvailableMoves } from "./utility.js";
+import { validate, getAvailableMoves, calculateNextMove } from "./utility.js";
 import { render } from "./render.js";
 class Ship {
   constructor(length) {
@@ -86,6 +86,8 @@ const Gameboard = () => {
     previousAttacks.clear();
   };
 
+  const randomizeBoard = () => {};
+
   return {
     board,
     maxShips,
@@ -96,6 +98,7 @@ const Gameboard = () => {
     missedAttacks,
     allShipsDestroyed,
     reset,
+    randomizeBoard,
   };
 };
 
@@ -115,21 +118,48 @@ const playGame = (() => {
   const changeTurn = () => {
     playerTurn = !playerTurn;
   };
+  const nextComputerMove = [];
   const computerMove = (player) => {
+    const gameState = playGame.getGameState();
+    if (gameState.playerTurn) return;
     const previousAttacks = player.gameboard.previousAttacks;
     const availableMoves = getAvailableMoves(previousAttacks);
     if (availableMoves.length === 0) return;
     const randomMove =
       availableMoves[Math.floor(Math.random() * availableMoves.length)];
+    if (nextComputerMove.length) {
+      setTimeout(() => {
+        let nextAttack = nextComputerMove[0][0];
+        const attack = player.gameboard.receiveAttack(nextAttack);
+        render.displayAttack(attack, nextAttack, player);
+        if (attack) {
+          if (attack.sunk) {
+            nextComputerMove.length = 0;
+            computerMove(player);
+          } else {
+            nextComputerMove[0].shift();
+            if (!nextComputerMove[0].length) nextComputerMove.shift();
+            computerMove(player);
+          }
+        } else {
+          nextComputerMove.shift();
+          playGame.changeTurn();
+        }
+      }, 2500);
+      return;
+    }
     setTimeout(() => {
       const attack = player.gameboard.receiveAttack(randomMove);
       render.displayAttack(attack, randomMove, player);
       if (attack) {
-        computerMove(player);
-      } else {
-        playGame.changeTurn();
-      }
-    }, 2500);
+        if (!attack.sunk) {
+          calculateNextMove(randomMove, nextComputerMove, previousAttacks);
+          computerMove(player);
+        } else {
+          computerMove(player);
+        }
+      } else playGame.changeTurn();
+    }, 1000);
   };
   return { getGameState, startGame, quitGame, changeTurn, computerMove };
 })();
