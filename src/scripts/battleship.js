@@ -1,4 +1,9 @@
-import { validate, getAvailableMoves, calculateNextMove, generateCoordinates } from "./utility.js";
+import {
+  validate,
+  getAvailableMoves,
+  calculateNextMove,
+  generateCoordinates,
+} from "./utility.js";
 import { render } from "./render.js";
 class Ship {
   constructor(length) {
@@ -89,6 +94,10 @@ const Gameboard = () => {
   const randomizeBoard = (board) => {
     board.fill(null);
     placedShips.clear();
+    totalShips.length1 = 0;
+    totalShips.length2 = 0;
+    totalShips.length3 = 0;
+    totalShips.length4 = 0;
     const shipSizes = [
       { length: 4, amount: 1 },
       { length: 3, amount: 2 },
