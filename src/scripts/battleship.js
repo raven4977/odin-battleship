@@ -182,7 +182,7 @@ const playGame = (() => {
           nextComputerMove.shift();
           playGame.changeTurn();
         }
-      }, 2500);
+      }, 1500);
       return;
     }
     setTimeout(() => {
@@ -196,7 +196,7 @@ const playGame = (() => {
           computerMove(player);
         }
       } else playGame.changeTurn();
-    }, 1000);
+    }, 1500);
   };
   return { getGameState, startGame, quitGame, changeTurn, computerMove };
 })();
