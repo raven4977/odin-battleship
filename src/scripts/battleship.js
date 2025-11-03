@@ -1,4 +1,4 @@
-import { validate, getAvailableMoves, calculateNextMove } from "./utility.js";
+import { validate, getAvailableMoves, calculateNextMove, generateCoordinates } from "./utility.js";
 import { render } from "./render.js";
 class Ship {
   constructor(length) {
@@ -86,7 +86,35 @@ const Gameboard = () => {
     previousAttacks.clear();
   };
 
-  const randomizeBoard = () => {};
+  const randomizeBoard = (board) => {
+    board.fill(null);
+    placedShips.clear();
+    const shipSizes = [
+      { length: 4, amount: 1 },
+      { length: 3, amount: 2 },
+      { length: 2, amount: 3 },
+      { length: 1, amount: 4 },
+    ];
+
+    for (const { length, amount } of shipSizes) {
+      for (let i = 0; i < amount; i++) {
+        const coordinates = generateCoordinates(
+          length,
+          board,
+          maxShips,
+          totalShips
+        );
+
+        if (!coordinates) {
+          return randomizeBoard(board);
+        }
+
+        placeShip(length, coordinates);
+      }
+    }
+
+    return true;
+  };
 
   return {
     board,
