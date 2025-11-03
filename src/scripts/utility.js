@@ -79,6 +79,61 @@ function calculateNextMove(current, nextMoveArray, previousAttacks) {
   }
 }
 
+function generateCoordinates(length, board, maxShips, totalShips) {
+  const possiblePlacements = [];
+
+  for (let start = 0; start < 100; start++) {
+    const row = Math.floor(start / 10);
+    const col = start % 10;
+    if (col + length <= 10) {
+      const coords = [];
+      for (let i = 0; i < length; i++) {
+        coords.push(start + i);
+      }
+      possiblePlacements.push(coords);
+    }
+
+    if (col - length + 1 >= 0) {
+      const coords = [];
+      for (let i = 0; i < length; i++) {
+        coords.push(start - i);
+      }
+      possiblePlacements.push(coords);
+    }
+    if (row + length <= 10) {
+      const coords = [];
+      for (let i = 0; i < length; i++) {
+        coords.push(start + i * 10);
+      }
+      possiblePlacements.push(coords);
+    }
+    if (row - length + 1 >= 0) {
+      const coords = [];
+      for (let i = 0; i < length; i++) {
+        coords.push(start - i * 10);
+      }
+      possiblePlacements.push(coords);
+    }
+  }
+  shuffleArray(possiblePlacements);
+
+  for (const coordinates of possiblePlacements) {
+    const valid = validate.validateShipPlacement(
+      length,
+      coordinates,
+      board,
+      maxShips,
+      totalShips
+    );
+
+    if (valid) {
+      return coordinates;
+    }
+  }
+
+  return null;
+}
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
