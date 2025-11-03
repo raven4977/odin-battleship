@@ -52,7 +52,18 @@ const events = (() => {
       }
     });
   };
-  return { startGameEvent, computerBoardEvents };
+
+  const shuffleButtonEvents = (player) => {
+    const shuffleButton = document.querySelector(".shuffle-button");
+    shuffleButton.addEventListener("click", () => {
+      const gameState = playGame.getGameState();
+      if (!gameState.gameStatus) {
+        player.gameboard.randomizeBoard(player.gameboard.board);
+        render.renderBoard(player);
+      }
+    });
+  };
+  return { startGameEvent, computerBoardEvents, shuffleButtonEvents };
 })();
 
 export { events };
