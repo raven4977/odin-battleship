@@ -114,3 +114,19 @@ button {
 .--sunk {
   background-color: rgba(61, 136, 39, 0.678);
 }
+
+.shuffle-button {
+  width: max-content;
+  background-color: transparent;
+  border: none;
+  color: rgb(219, 219, 219);
+  font-size: 1.25rem;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.shuffle-icon {
+  width: 25px;
+}
