@@ -17,6 +17,7 @@ const events = (() => {
         updateDisplayMessage(startButton, "Quit");
         updateDisplayMessage(descriptionElement, "Click quit to end match");
         updateDisplayMessage(resultElement, "Your Turn!");
+        computer.gameboard.randomizeBoard(computer.gameboard.board);
         return;
       } else {
         playGame.quitGame();
