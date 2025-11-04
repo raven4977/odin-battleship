@@ -31,7 +31,16 @@ const validate = (() => {
     }
     return true;
   };
-  return { validateShipPlacement };
+
+  const validateDragShip = (coordinates, board) => {
+    for (let i = 0; i < coordinates.length; i++) {
+      const coordinate = coordinates[i];
+      if (coordinate < 0 || coordinate > 99) return false;
+      if (board[coordinate]) return false;
+    }
+    return true;
+  };
+  return { validateShipPlacement, validateDragShip };
 })();
 
 function updateDisplayMessage(element, message) {
