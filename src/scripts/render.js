@@ -4,6 +4,7 @@ import { playGame } from "./battleship.js";
 
 const render = (() => {
   const renderBoard = (player) => {
+    const playerDivs = [];
     const board = player.gameboard.board;
     const playerType = player.player ? "player" : "computer";
     const boardElement = document.querySelector(`.${playerType}-board`);
@@ -12,6 +13,7 @@ const render = (() => {
       const div = document.createElement("div");
       div.classList.add("square");
       if (playerType === "player") {
+        events.dragClickShips(player, div, square, playerDivs);
         if (square) {
           div.textContent = square.length;
           div.classList.add("ship");
@@ -19,6 +21,7 @@ const render = (() => {
       } else {
         events.computerBoardEvents(div, index, player);
       }
+      playerDivs.push({ div, square, index });
       boardElement.appendChild(div);
     });
   };
@@ -82,7 +85,26 @@ const render = (() => {
       }
     }
   };
-  return { renderBoard, displayAttack };
+  const isHovering = (length, index, isHorizontal) => {
+    const boardSquares = document.querySelectorAll(".player-board .square");
+    boardSquares.forEach((square) => square.classList.remove("highlight"));
+
+    if (length === 1) {
+      boardSquares[index].classList.add("highlight");
+    } else if (isHorizontal) {
+      for (let i = 0; i < length; i++) {
+        boardSquares[index + i].classList.add("highlight");
+      }
+    } else {
+      for (let i = 0; i < length; i++) {
+        if (boardSquares[index + i * 10]) {
+          boardSquares[index + i * 10].classList.add("highlight");
+        }
+      }
+    }
+  };
+
+  return { renderBoard, displayAttack, isHovering };
 })();
 
 export { render };
