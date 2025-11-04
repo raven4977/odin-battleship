@@ -145,3 +145,7 @@ button {
 .selected {
   box-shadow: inset 0 0 0 3px rgba(53, 172, 219, 0.541);
 }
+
+.highlight {
+  box-shadow: inset 0 0 0 5px rgba(28, 218, 43, 0.541);
+}
